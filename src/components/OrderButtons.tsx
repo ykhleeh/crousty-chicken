@@ -1,7 +1,9 @@
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
+import Link from "next/link";
 
 export default function OrderButtons() {
   const t = useTranslations("Order");
+  const locale = useLocale();
 
   const platforms = [
     {
@@ -49,7 +51,14 @@ export default function OrderButtons() {
           ))}
         </div>
 
-        <p className="text-white/40 text-sm mt-8">{t("comingSoon")}</p>
+        <div className="mt-8">
+          <Link
+            href={`/${locale}/order`}
+            className="inline-block bg-golden hover:bg-golden-dark text-black font-bold text-lg px-8 py-4 rounded-full transition-colors"
+          >
+            {t("clickCollect")}
+          </Link>
+        </div>
       </div>
     </section>
   );

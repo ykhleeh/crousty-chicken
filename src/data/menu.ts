@@ -128,6 +128,8 @@ export const entryItems: EntryItem[] = [
   },
 ];
 
+export const bases = ["Riz", "Frites"];
+
 export const sauces = ["Hot shot", "Aigre-douce", "Sweety sweet", "Dracula killer"];
 
 export const toppings = [
