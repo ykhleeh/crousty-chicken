@@ -1,0 +1,101 @@
+{
+  "Header": {
+    "menu": "Our Dishes",
+    "entries": "Starters",
+    "compose": "Build Your Crousty",
+    "order": "Order",
+    "location": "Find Us"
+  },
+  "Hero": {
+    "title": "Crousty Chicken",
+    "subtitle": "The best crispy chicken in Brussels",
+    "cta": "Order now"
+  },
+  "Menu": {
+    "title": "Our Dishes",
+    "sizeM": "M",
+    "sizeL": "L",
+    "sizeXL": "XL",
+    "original": "The Original",
+    "originalDesc": "Crispy chicken, house sauce, fries",
+    "spicyFries": "Spicy fries",
+    "spicyFriesDesc": "Spicy chicken, hot shot sauce, fries",
+    "vegeFries": "Vege fries",
+    "vegeFriesDesc": "Falafel, house sauce, fries",
+    "bbqLoverRice": "BBQ Lover rice",
+    "bbqLoverRiceDesc": "BBQ chicken, sweet & sour sauce, rice",
+    "vegeRice": "Vege rice",
+    "vegeRiceDesc": "Falafel, house sauce, rice",
+    "bbqLoverFries": "BBQ Lover fries",
+    "bbqLoverFriesDesc": "BBQ chicken, sweet & sour sauce, fries",
+    "spicyRice": "Spicy rice",
+    "spicyRiceDesc": "Spicy chicken, hot shot sauce, rice",
+    "fiftyFiftyBox": "50/50 Box",
+    "fiftyFiftyBoxDesc": "Half rice, half fries, chicken of your choice"
+  },
+  "Entries": {
+    "title": "Starters",
+    "pieces": "pcs",
+    "mozzaSticks": "Mozza sticks",
+    "wings": "Wings",
+    "chiliCheese": "Chili cheese",
+    "onionRings": "Onion rings",
+    "pouletKaraage": "Chicken karaage"
+  },
+  "Compose": {
+    "title": "Build Your Crousty",
+    "subtitle": "Customize your dish in 6 simple steps",
+    "pricing": "M €9.00 · L €13.00 · XL €17.00",
+    "step1Title": "1. Choose your size",
+    "step1Desc": "M, L or XL — depending on your appetite",
+    "step1Options": "M / L / XL",
+    "step2Title": "2. Choose your base",
+    "step2Desc": "The foundation of your Crousty",
+    "step2Options": "Rice / Fries",
+    "step3Title": "3. Base sauce",
+    "step3Desc": "Drizzled over your base",
+    "step3Options": "House sauce / Cheddar",
+    "step3Note": "Cheddar recommended on fries",
+    "step4Title": "4. Choose your meat",
+    "step4Desc": "Classic chicken, spicy or vegetarian",
+    "step4Options": "Plain chicken, Hot chicken, Falafel",
+    "step5Title": "5. Chicken sauce",
+    "step5Desc": "The finishing touch on your chicken",
+    "step5Options": "Hot shot, Sweet & sour, Sweety sweet, Dracula killer",
+    "step6Title": "6. Toppings (2 included)",
+    "step6Desc": "Pick 2 toppings from our selection",
+    "step6Options": "Fried onions, Spring onions, Jalapeños, Peppers, Corn"
+  },
+  "DrinksAndDesserts": {
+    "drinksTitle": "Drinks",
+    "drinksPrice": "€2.50 each",
+    "dessertsTitle": "Desserts",
+    "dessertsPrice": "€4.50 each"
+  },
+  "Order": {
+    "title": "Order",
+    "subtitle": "Order through your favourite platform",
+    "uberEats": "Order on UberEats",
+    "justEat": "Order on Just Eat",
+    "deliveroo": "Order on Deliveroo",
+    "comingSoon": "Our own ordering system coming soon"
+  },
+  "Location": {
+    "title": "Find Us",
+    "address": "Rue du Poulet 42, 1000 Brussels",
+    "hoursTitle": "Opening hours",
+    "hours": "Mon - Sun: 11:00 AM - 10:00 PM",
+    "phone": "Phone: +32 2 123 45 67"
+  },
+  "Footer": {
+    "followUs": "Follow us",
+    "contact": "Contact",
+    "email": "info@croustychicken.be",
+    "rights": "© 2025 Crousty Chicken. All rights reserved."
+  },
+  "LanguageSwitcher": {
+    "fr": "FR",
+    "nl": "NL",
+    "en": "EN"
+  }
+}

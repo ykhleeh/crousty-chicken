@@ -1,0 +1,101 @@
+{
+  "Header": {
+    "menu": "Nos Plats",
+    "entries": "Entrées",
+    "compose": "Compose ton Crousty",
+    "order": "Commander",
+    "location": "Nous trouver"
+  },
+  "Hero": {
+    "title": "Crousty Chicken",
+    "subtitle": "Le meilleur poulet croustillant de Bruxelles",
+    "cta": "Commander maintenant"
+  },
+  "Menu": {
+    "title": "Nos Plats",
+    "sizeM": "M",
+    "sizeL": "L",
+    "sizeXL": "XL",
+    "original": "L'Original",
+    "originalDesc": "Poulet croustillant, sauce maison, frites",
+    "spicyFries": "Spicy fries",
+    "spicyFriesDesc": "Poulet piquant, sauce hot shot, frites",
+    "vegeFries": "Vege fries",
+    "vegeFriesDesc": "Falafel, sauce maison, frites",
+    "bbqLoverRice": "BBQ Lover rice",
+    "bbqLoverRiceDesc": "Poulet BBQ, sauce aigre-douce, riz",
+    "vegeRice": "Vege rice",
+    "vegeRiceDesc": "Falafel, sauce maison, riz",
+    "bbqLoverFries": "BBQ Lover fries",
+    "bbqLoverFriesDesc": "Poulet BBQ, sauce aigre-douce, frites",
+    "spicyRice": "Spicy rice",
+    "spicyRiceDesc": "Poulet piquant, sauce hot shot, riz",
+    "fiftyFiftyBox": "50/50 Box",
+    "fiftyFiftyBoxDesc": "Moitié riz, moitié frites, poulet au choix"
+  },
+  "Entries": {
+    "title": "Entrées",
+    "pieces": "pcs",
+    "mozzaSticks": "Mozza sticks",
+    "wings": "Wings",
+    "chiliCheese": "Chili cheese",
+    "onionRings": "Onion rings",
+    "pouletKaraage": "Poulet karaage"
+  },
+  "Compose": {
+    "title": "Compose ton Crousty",
+    "subtitle": "Personnalise ton plat en 6 étapes simples",
+    "pricing": "M 9,00€ · L 13,00€ · XL 17,00€",
+    "step1Title": "1. Choisis ta taille",
+    "step1Desc": "M, L ou XL — selon ton appétit",
+    "step1Options": "M / L / XL",
+    "step2Title": "2. Choisis ta base",
+    "step2Desc": "La fondation de ton Crousty",
+    "step2Options": "Riz / Frites",
+    "step3Title": "3. Sauce de base",
+    "step3Desc": "Nappée sur ta base",
+    "step3Options": "Sauce maison / Cheddar",
+    "step3Note": "Cheddar conseillé sur frites",
+    "step4Title": "4. Choisis ta viande",
+    "step4Desc": "Poulet classique, épicé ou végétarien",
+    "step4Options": "Poulet nature, Poulet hot, Falafel",
+    "step5Title": "5. Sauce poulet",
+    "step5Desc": "La touche finale sur ton poulet",
+    "step5Options": "Hot shot, Aigre-douce, Sweety sweet, Dracula killer",
+    "step6Title": "6. Toppings (2 inclus)",
+    "step6Desc": "Choisis 2 toppings parmi notre sélection",
+    "step6Options": "Oignons frits, Oignons jeunes, Jalapeños, Poivrons, Maïs"
+  },
+  "DrinksAndDesserts": {
+    "drinksTitle": "Boissons",
+    "drinksPrice": "2,50€ chacune",
+    "dessertsTitle": "Desserts",
+    "dessertsPrice": "4,50€ chacun"
+  },
+  "Order": {
+    "title": "Commander",
+    "subtitle": "Commandez via votre plateforme préférée",
+    "uberEats": "Commander sur UberEats",
+    "justEat": "Commander sur Just Eat",
+    "deliveroo": "Commander sur Deliveroo",
+    "comingSoon": "Système de commande propre bientôt disponible"
+  },
+  "Location": {
+    "title": "Nous trouver",
+    "address": "Rue du Poulet 42, 1000 Bruxelles",
+    "hoursTitle": "Horaires d'ouverture",
+    "hours": "Lun - Dim : 11h00 - 22h00",
+    "phone": "Tél : +32 2 123 45 67"
+  },
+  "Footer": {
+    "followUs": "Suivez-nous",
+    "contact": "Contact",
+    "email": "info@croustychicken.be",
+    "rights": "© 2025 Crousty Chicken. Tous droits réservés."
+  },
+  "LanguageSwitcher": {
+    "fr": "FR",
+    "nl": "NL",
+    "en": "EN"
+  }
+}

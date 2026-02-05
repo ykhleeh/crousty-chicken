@@ -1,0 +1,101 @@
+{
+  "Header": {
+    "menu": "Onze Gerechten",
+    "entries": "Voorgerechten",
+    "compose": "Stel je Crousty samen",
+    "order": "Bestellen",
+    "location": "Vind ons"
+  },
+  "Hero": {
+    "title": "Crousty Chicken",
+    "subtitle": "De beste krokante kip van Brussel",
+    "cta": "Nu bestellen"
+  },
+  "Menu": {
+    "title": "Onze Gerechten",
+    "sizeM": "M",
+    "sizeL": "L",
+    "sizeXL": "XL",
+    "original": "The Original",
+    "originalDesc": "Krokante kip, huissaus, frietjes",
+    "spicyFries": "Spicy fries",
+    "spicyFriesDesc": "Pikante kip, hot shot saus, frietjes",
+    "vegeFries": "Vege fries",
+    "vegeFriesDesc": "Falafel, huissaus, frietjes",
+    "bbqLoverRice": "BBQ Lover rice",
+    "bbqLoverRiceDesc": "BBQ kip, zoetzure saus, rijst",
+    "vegeRice": "Vege rice",
+    "vegeRiceDesc": "Falafel, huissaus, rijst",
+    "bbqLoverFries": "BBQ Lover fries",
+    "bbqLoverFriesDesc": "BBQ kip, zoetzure saus, frietjes",
+    "spicyRice": "Spicy rice",
+    "spicyRiceDesc": "Pikante kip, hot shot saus, rijst",
+    "fiftyFiftyBox": "50/50 Box",
+    "fiftyFiftyBoxDesc": "Half rijst, half frietjes, kip naar keuze"
+  },
+  "Entries": {
+    "title": "Voorgerechten",
+    "pieces": "st",
+    "mozzaSticks": "Mozza sticks",
+    "wings": "Wings",
+    "chiliCheese": "Chili cheese",
+    "onionRings": "Onion rings",
+    "pouletKaraage": "Kip karaage"
+  },
+  "Compose": {
+    "title": "Stel je Crousty samen",
+    "subtitle": "Personaliseer je gerecht in 6 eenvoudige stappen",
+    "pricing": "M €9,00 · L €13,00 · XL €17,00",
+    "step1Title": "1. Kies je maat",
+    "step1Desc": "M, L of XL — afhankelijk van je honger",
+    "step1Options": "M / L / XL",
+    "step2Title": "2. Kies je basis",
+    "step2Desc": "De basis van je Crousty",
+    "step2Options": "Rijst / Frietjes",
+    "step3Title": "3. Basissaus",
+    "step3Desc": "Over je basis gegoten",
+    "step3Options": "Huissaus / Cheddar",
+    "step3Note": "Cheddar aanbevolen op frietjes",
+    "step4Title": "4. Kies je vlees",
+    "step4Desc": "Klassieke kip, pikant of vegetarisch",
+    "step4Options": "Naturel kip, Hot kip, Falafel",
+    "step5Title": "5. Kipsaus",
+    "step5Desc": "De finishing touch op je kip",
+    "step5Options": "Hot shot, Zoetzuur, Sweety sweet, Dracula killer",
+    "step6Title": "6. Toppings (2 inbegrepen)",
+    "step6Desc": "Kies 2 toppings uit onze selectie",
+    "step6Options": "Gebakken uien, Lente-uitjes, Jalapeños, Paprika, Maïs"
+  },
+  "DrinksAndDesserts": {
+    "drinksTitle": "Dranken",
+    "drinksPrice": "€2,50 per stuk",
+    "dessertsTitle": "Desserts",
+    "dessertsPrice": "€4,50 per stuk"
+  },
+  "Order": {
+    "title": "Bestellen",
+    "subtitle": "Bestel via je favoriete platform",
+    "uberEats": "Bestellen via UberEats",
+    "justEat": "Bestellen via Just Eat",
+    "deliveroo": "Bestellen via Deliveroo",
+    "comingSoon": "Eigen bestelsysteem binnenkort beschikbaar"
+  },
+  "Location": {
+    "title": "Vind ons",
+    "address": "Kippenstraat 42, 1000 Brussel",
+    "hoursTitle": "Openingsuren",
+    "hours": "Ma - Zo: 11:00 - 22:00",
+    "phone": "Tel: +32 2 123 45 67"
+  },
+  "Footer": {
+    "followUs": "Volg ons",
+    "contact": "Contact",
+    "email": "info@croustychicken.be",
+    "rights": "© 2025 Crousty Chicken. Alle rechten voorbehouden."
+  },
+  "LanguageSwitcher": {
+    "fr": "FR",
+    "nl": "NL",
+    "en": "EN"
+  }
+}
