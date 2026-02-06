@@ -38,12 +38,15 @@ export default function OrderList() {
           schema: "public",
           table: "orders",
         },
-        () => {
+        (payload) => {
+          console.log("Realtime event received:", payload);
           // Refetch on any change
           fetchOrders();
         }
       )
-      .subscribe();
+      .subscribe((status) => {
+        console.log("Realtime subscription status:", status);
+      });
 
     return () => {
       supabase.removeChannel(channel);
