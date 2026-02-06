@@ -64,7 +64,13 @@ export async function getOrders(
     const {
       data: { user },
     } = await supabase.auth.getUser();
-    if (!user) return [];
+
+    console.log("getOrders - user:", user?.email || "NO USER");
+
+    if (!user) {
+      console.log("getOrders - returning empty (no user)");
+      return [];
+    }
 
     let query = supabase
       .from("orders")
@@ -77,9 +83,13 @@ export async function getOrders(
       query = query.neq("status", "pending");
     }
 
-    const { data } = await query;
+    const { data, error } = await query;
+
+    console.log("getOrders - query result:", { count: data?.length, error });
+
     return (data as Order[]) || [];
-  } catch {
+  } catch (e) {
+    console.error("getOrders - error:", e);
     return [];
   }
 }
