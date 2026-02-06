@@ -129,7 +129,7 @@ export async function createCheckoutSession(
     });
 
     // Create Stripe checkout session
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL!;
+    const baseUrl = (process.env.NEXT_PUBLIC_BASE_URL || "").trim().replace(/[^\x20-\x7E]/g, "");
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card", "bancontact"],
       line_items: lineItems,
