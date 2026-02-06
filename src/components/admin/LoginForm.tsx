@@ -20,6 +20,25 @@ export default function LoginForm() {
     setLoading(true);
     setError(null);
 
+    // Test raw fetch first
+    try {
+      const testUrl = process.env.NEXT_PUBLIC_SUPABASE_URL + "/auth/v1/token?grant_type=password";
+      const testKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+      console.log("Testing raw fetch to:", testUrl?.substring(0, 50));
+
+      const testResponse = await fetch(testUrl!, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "apikey": testKey!,
+        },
+        body: JSON.stringify({ email, password }),
+      });
+      console.log("Raw fetch worked! Status:", testResponse.status);
+    } catch (fetchError) {
+      console.error("Raw fetch failed:", fetchError);
+    }
+
     const supabase = createClient();
     const { error: authError } = await supabase.auth.signInWithPassword({
       email,
