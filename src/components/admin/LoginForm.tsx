@@ -20,42 +20,6 @@ export default function LoginForm() {
     setLoading(true);
     setError(null);
 
-    // Test raw fetch first
-    try {
-      const baseUrl = (process.env.NEXT_PUBLIC_SUPABASE_URL || "").trim();
-      const testKey = (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "").trim();
-
-      // Test 1: Simple GET without auth
-      console.log("Test 1: Simple fetch to google...");
-      const test1 = await fetch("https://www.google.com", { method: "HEAD", mode: "no-cors" });
-      console.log("Test 1 passed");
-
-      // Test 2: Fetch with just Content-Type header
-      console.log("Test 2: Fetch with Content-Type only...");
-      const test2 = await fetch(baseUrl + "/rest/v1/", {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
-      console.log("Test 2 status:", test2.status);
-
-      // Test 3: Fetch with API key as query param
-      console.log("Test 3: Fetch with apikey as query param...");
-      const test3 = await fetch(baseUrl + "/rest/v1/settings?select=key&apikey=" + testKey, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      console.log("Test 3 status:", test3.status);
-      if (test3.ok) {
-        const data = await test3.json();
-        console.log("Test 3 data:", data);
-      }
-
-    } catch (fetchError) {
-      console.error("Fetch test failed:", fetchError);
-    }
-
     const supabase = createClient();
     const { error: authError } = await supabase.auth.signInWithPassword({
       email,
