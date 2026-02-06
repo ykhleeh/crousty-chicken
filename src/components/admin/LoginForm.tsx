@@ -22,26 +22,35 @@ export default function LoginForm() {
 
     // Test raw fetch first
     try {
-      const testUrl = (process.env.NEXT_PUBLIC_SUPABASE_URL || "").trim() + "/auth/v1/token?grant_type=password";
+      const baseUrl = (process.env.NEXT_PUBLIC_SUPABASE_URL || "").trim();
       const testKey = (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "").trim();
 
-      // Log character codes to find hidden chars
-      console.log("Key first 10 chars:", testKey.substring(0, 10));
-      console.log("Key last 10 chars:", testKey.substring(testKey.length - 10));
-      console.log("Key char codes (first 5):", [...testKey.substring(0, 5)].map(c => c.charCodeAt(0)));
-      console.log("Key char codes (last 5):", [...testKey.substring(testKey.length - 5)].map(c => c.charCodeAt(0)));
+      // Test 1: Simple GET without auth
+      console.log("Test 1: Simple fetch to google...");
+      const test1 = await fetch("https://www.google.com", { method: "HEAD", mode: "no-cors" });
+      console.log("Test 1 passed");
 
-      const testResponse = await fetch(testUrl, {
-        method: "POST",
+      // Test 2: Fetch with just Content-Type header
+      console.log("Test 2: Fetch with Content-Type only...");
+      const test2 = await fetch(baseUrl + "/rest/v1/", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+      console.log("Test 2 status:", test2.status);
+
+      // Test 3: Fetch with apikey header
+      console.log("Test 3: Fetch with apikey header...");
+      const test3 = await fetch(baseUrl + "/rest/v1/settings?select=key", {
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
           "apikey": testKey,
         },
-        body: JSON.stringify({ email, password }),
       });
-      console.log("Raw fetch worked! Status:", testResponse.status);
+      console.log("Test 3 status:", test3.status);
+
     } catch (fetchError) {
-      console.error("Raw fetch failed:", fetchError);
+      console.error("Fetch test failed:", fetchError);
     }
 
     const supabase = createClient();
