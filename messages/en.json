@@ -199,7 +199,8 @@
     "loading": "Loading...",
     "noOrders": "No orders",
     "markAs_preparing": "Mark preparing",
-    "markAs_ready": "Mark ready"
+    "markAs_ready": "Mark ready",
+    "updating": "Updating..."
   },
   "LanguageSwitcher": {
     "fr": "FR",

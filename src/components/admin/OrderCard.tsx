@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { updateOrderStatus } from "@/actions/admin-actions";
 import StatusBadge from "@/components/confirmation/StatusBadge";
@@ -13,6 +14,7 @@ export default function OrderCard({ order }: OrderCardProps) {
   const t = useTranslations("Admin");
   const tMenu = useTranslations("Menu");
   const tEntries = useTranslations("Entries");
+  const [loading, setLoading] = useState(false);
 
   const getItemName = (item: Order["items"][0]) => {
     switch (item.type) {
@@ -30,7 +32,10 @@ export default function OrderCard({ order }: OrderCardProps) {
   };
 
   const handleStatusChange = async (newStatus: OrderStatus) => {
+    if (loading) return;
+    setLoading(true);
     await updateOrderStatus(order.id, newStatus);
+    setLoading(false);
   };
 
   const nextStatus: Record<string, OrderStatus | null> = {
@@ -74,9 +79,36 @@ export default function OrderCard({ order }: OrderCardProps) {
         {next && (
           <button
             onClick={() => handleStatusChange(next)}
-            className="bg-golden hover:bg-golden-dark text-black font-bold px-4 py-2 rounded-xl transition-colors text-sm"
+            disabled={loading}
+            className={`font-bold px-4 py-2 rounded-xl transition-colors text-sm flex items-center gap-2 ${
+              loading
+                ? "bg-white/20 text-white/50 cursor-not-allowed"
+                : "bg-golden hover:bg-golden-dark text-black"
+            }`}
           >
-            {t(`markAs_${next}`)}
+            {loading && (
+              <svg
+                className="animate-spin h-4 w-4"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                />
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                />
+              </svg>
+            )}
+            {loading ? t("updating") : t(`markAs_${next}`)}
           </button>
         )}
       </div>

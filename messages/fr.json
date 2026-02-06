@@ -199,7 +199,8 @@
     "loading": "Chargement...",
     "noOrders": "Aucune commande",
     "markAs_preparing": "En préparation",
-    "markAs_ready": "Prête"
+    "markAs_ready": "Prête",
+    "updating": "Mise à jour..."
   },
   "LanguageSwitcher": {
     "fr": "FR",

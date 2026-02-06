@@ -199,7 +199,8 @@
     "loading": "Laden...",
     "noOrders": "Geen bestellingen",
     "markAs_preparing": "In bereiding zetten",
-    "markAs_ready": "Klaar melden"
+    "markAs_ready": "Klaar melden",
+    "updating": "Bijwerken..."
   },
   "LanguageSwitcher": {
     "fr": "FR",
