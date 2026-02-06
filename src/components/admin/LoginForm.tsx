@@ -38,16 +38,27 @@ export default function LoginForm() {
       });
       console.log("Test 2 status:", test2.status);
 
-      // Test 3: Fetch with apikey header
-      console.log("Test 3: Fetch with apikey header...");
+      // Test 3: Fetch with Authorization header instead of apikey
+      console.log("Test 3: Fetch with Authorization header...");
       const test3 = await fetch(baseUrl + "/rest/v1/settings?select=key", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "apikey": testKey,
+          "Authorization": "Bearer " + testKey,
         },
       });
       console.log("Test 3 status:", test3.status);
+
+      // Test 4: Try with Headers object
+      console.log("Test 4: Fetch with Headers object and apikey...");
+      const headers = new Headers();
+      headers.set("Content-Type", "application/json");
+      headers.set("apikey", testKey);
+      const test4 = await fetch(baseUrl + "/rest/v1/settings?select=key", {
+        method: "GET",
+        headers: headers,
+      });
+      console.log("Test 4 status:", test4.status);
 
     } catch (fetchError) {
       console.error("Fetch test failed:", fetchError);
