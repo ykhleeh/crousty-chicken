@@ -22,15 +22,20 @@ export default function LoginForm() {
 
     // Test raw fetch first
     try {
-      const testUrl = process.env.NEXT_PUBLIC_SUPABASE_URL + "/auth/v1/token?grant_type=password";
-      const testKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-      console.log("Testing raw fetch to:", testUrl?.substring(0, 50));
+      const testUrl = (process.env.NEXT_PUBLIC_SUPABASE_URL || "").trim() + "/auth/v1/token?grant_type=password";
+      const testKey = (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "").trim();
 
-      const testResponse = await fetch(testUrl!, {
+      // Log character codes to find hidden chars
+      console.log("Key first 10 chars:", testKey.substring(0, 10));
+      console.log("Key last 10 chars:", testKey.substring(testKey.length - 10));
+      console.log("Key char codes (first 5):", [...testKey.substring(0, 5)].map(c => c.charCodeAt(0)));
+      console.log("Key char codes (last 5):", [...testKey.substring(testKey.length - 5)].map(c => c.charCodeAt(0)));
+
+      const testResponse = await fetch(testUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "apikey": testKey!,
+          "apikey": testKey,
         },
         body: JSON.stringify({ email, password }),
       });
