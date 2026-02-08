@@ -1,5 +1,7 @@
+import type { Product } from "@/types/product";
+
 export interface MenuItem {
-  id: number;
+  id: string;
   nameKey: string;
   descriptionKey: string;
   image: string;
@@ -9,23 +11,34 @@ export interface MenuItem {
     XL: number;
   };
   singlePrice?: boolean;
+  // Localized names for direct display
+  name_fr: string;
+  name_nl: string | null;
+  name_en: string | null;
+  description_fr: string | null;
+  description_nl: string | null;
+  description_en: string | null;
 }
 
 export interface EntryItem {
-  id: number;
+  id: string;
   nameKey: string;
   small: { qty: number; price: number };
   large: { qty: number; price: number };
+  // Localized names
+  name_fr: string;
+  name_nl: string | null;
+  name_en: string | null;
 }
 
 export interface Drink {
-  id: number;
+  id: string;
   name: string;
   price: number;
 }
 
 export interface Dessert {
-  id: number;
+  id: string;
   name: string;
   price: number;
 }
@@ -35,98 +48,68 @@ export interface AddOn {
   price: number;
 }
 
-export const menuItems: MenuItem[] = [
-  {
-    id: 1,
-    nameKey: "original",
-    descriptionKey: "originalDesc",
-    image: "/plats/plat-1.jpg",
-    prices: { M: 9.0, L: 13.0, XL: 17.0 },
-  },
-  {
-    id: 2,
-    nameKey: "spicyFries",
-    descriptionKey: "spicyFriesDesc",
-    image: "/plats/plat-2.jpg",
-    prices: { M: 9.5, L: 13.5, XL: 17.5 },
-  },
-  {
-    id: 3,
-    nameKey: "vegeFries",
-    descriptionKey: "vegeFriesDesc",
-    image: "/plats/plat-3.jpg",
-    prices: { M: 9.5, L: 13.5, XL: 17.5 },
-  },
-  {
-    id: 4,
-    nameKey: "bbqLoverRice",
-    descriptionKey: "bbqLoverRiceDesc",
-    image: "/plats/plat-4.jpg",
-    prices: { M: 9.5, L: 13.5, XL: 17.5 },
-  },
-  {
-    id: 5,
-    nameKey: "vegeRice",
-    descriptionKey: "vegeRiceDesc",
-    image: "/plats/plat-5.jpg",
-    prices: { M: 9.0, L: 13.0, XL: 17.0 },
-  },
-  {
-    id: 6,
-    nameKey: "bbqLoverFries",
-    descriptionKey: "bbqLoverFriesDesc",
-    image: "/plats/plat-6.jpg",
-    prices: { M: 9.5, L: 13.5, XL: 17.5 },
-  },
-  {
-    id: 7,
-    nameKey: "spicyRice",
-    descriptionKey: "spicyRiceDesc",
-    image: "/plats/plat-7.jpg",
-    prices: { M: 9.5, L: 13.5, XL: 17.5 },
-  },
-  {
-    id: 8,
-    nameKey: "fiftyFiftyBox",
-    descriptionKey: "fiftyFiftyBoxDesc",
-    image: "/plats/plat-8.jpg",
-    prices: { M: 17.0, L: 17.0, XL: 17.0 },
-    singlePrice: true,
-  },
-];
+// ============================================
+// Convert DB Products to Legacy Interfaces
+// ============================================
 
-export const entryItems: EntryItem[] = [
-  {
-    id: 1,
-    nameKey: "mozzaSticks",
-    small: { qty: 5, price: 5.5 },
-    large: { qty: 10, price: 10.0 },
-  },
-  {
-    id: 2,
-    nameKey: "wings",
-    small: { qty: 5, price: 5.5 },
-    large: { qty: 10, price: 10.0 },
-  },
-  {
-    id: 3,
-    nameKey: "chiliCheese",
-    small: { qty: 5, price: 5.5 },
-    large: { qty: 10, price: 10.0 },
-  },
-  {
-    id: 4,
-    nameKey: "onionRings",
-    small: { qty: 8, price: 5.5 },
-    large: { qty: 16, price: 10.0 },
-  },
-  {
-    id: 5,
-    nameKey: "pouletKaraage",
-    small: { qty: 5, price: 5.5 },
-    large: { qty: 10, price: 10.0 },
-  },
-];
+export function productToMenuItem(product: Product): MenuItem {
+  return {
+    id: product.id,
+    nameKey: product.id,
+    descriptionKey: product.id,
+    image: product.image_url || "/plats/plat-1.jpg",
+    prices: {
+      M: (product.price_m || 0) / 100,
+      L: (product.price_l || 0) / 100,
+      XL: (product.price_xl || 0) / 100,
+    },
+    singlePrice: product.is_single_price,
+    name_fr: product.name_fr,
+    name_nl: product.name_nl,
+    name_en: product.name_en,
+    description_fr: product.description_fr,
+    description_nl: product.description_nl,
+    description_en: product.description_en,
+  };
+}
+
+export function productToEntryItem(product: Product): EntryItem {
+  return {
+    id: product.id,
+    nameKey: product.id,
+    small: {
+      qty: product.qty_small || 5,
+      price: (product.price_small || 0) / 100,
+    },
+    large: {
+      qty: product.qty_large || 10,
+      price: (product.price_large || 0) / 100,
+    },
+    name_fr: product.name_fr,
+    name_nl: product.name_nl,
+    name_en: product.name_en,
+  };
+}
+
+export function productToDrink(product: Product): Drink {
+  return {
+    id: product.id,
+    name: product.name_fr,
+    price: (product.price || 0) / 100,
+  };
+}
+
+export function productToDessert(product: Product): Dessert {
+  return {
+    id: product.id,
+    name: product.name_fr,
+    price: (product.price || 0) / 100,
+  };
+}
+
+// ============================================
+// Static data (Compose wizard options - remain static)
+// ============================================
 
 export const bases = ["Riz", "Frites"];
 
@@ -143,21 +126,6 @@ export const toppings = [
 export const baseSauces = ["Sauce maison", "Cheddar"];
 
 export const viandes = ["Poulet nature", "Poulet hot", "Falafel"];
-
-export const drinks: Drink[] = [
-  { id: 1, name: "Coca-Cola", price: 2.5 },
-  { id: 2, name: "Coca-Cola zéro", price: 2.5 },
-  { id: 3, name: "Fuze tea pêche", price: 2.5 },
-  { id: 4, name: "Cristaline", price: 2.5 },
-  { id: 5, name: "Arizona", price: 2.5 },
-  { id: 6, name: "Eau spa", price: 2.5 },
-  { id: 7, name: "Fuze tea citron", price: 2.5 },
-];
-
-export const desserts: Dessert[] = [
-  { id: 1, name: "Tiramisu", price: 4.5 },
-  { id: 2, name: "Mousse au chocolat", price: 4.5 },
-];
 
 export const addOns: {
   extraToppings: AddOn;

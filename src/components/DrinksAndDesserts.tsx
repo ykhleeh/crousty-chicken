@@ -1,8 +1,18 @@
-import { useTranslations } from "next-intl";
-import { drinks, desserts } from "@/data/menu";
+import { getTranslations } from "next-intl/server";
+import { getAvailableProducts } from "@/actions/menu-actions";
+import { productToDrink, productToDessert } from "@/data/menu";
 
-export default function DrinksAndDesserts() {
-  const t = useTranslations("DrinksAndDesserts");
+export default async function DrinksAndDesserts() {
+  const t = await getTranslations("DrinksAndDesserts");
+
+  // Fetch drinks and desserts from database
+  const [drinksData, dessertsData] = await Promise.all([
+    getAvailableProducts("drink"),
+    getAvailableProducts("dessert"),
+  ]);
+
+  const drinks = drinksData.map(productToDrink);
+  const desserts = dessertsData.map(productToDessert);
 
   return (
     <section id="drinks-desserts" className="py-20 px-4">

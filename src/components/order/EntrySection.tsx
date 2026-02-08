@@ -1,19 +1,20 @@
 "use client";
 
-import { useTranslations } from "next-intl";
-import { entryItems } from "@/data/menu";
+import { useTranslations, useLocale } from "next-intl";
 import { useCartStore } from "@/store/cart-store";
 import type { EntryPortion } from "@/types/order";
+import type { EntryItem } from "@/data/menu";
 
-export default function EntrySection() {
+interface EntrySectionProps {
+  entryItems: EntryItem[];
+}
+
+export default function EntrySection({ entryItems }: EntrySectionProps) {
   const t = useTranslations("Entries");
-  const tOrder = useTranslations("OrderPage");
+  const locale = useLocale();
   const addItem = useCartStore((s) => s.addItem);
 
-  const handleAdd = (
-    entry: (typeof entryItems)[0],
-    portion: EntryPortion
-  ) => {
+  const handleAdd = (entry: EntryItem, portion: EntryPortion) => {
     const price = portion === "small" ? entry.small.price : entry.large.price;
     addItem({
       type: "entry",
@@ -24,6 +25,12 @@ export default function EntrySection() {
       price,
       quantity: 1,
     });
+  };
+
+  const getLocalizedName = (entry: EntryItem) => {
+    if (locale === "nl" && entry.name_nl) return entry.name_nl;
+    if (locale === "en" && entry.name_en) return entry.name_en;
+    return entry.name_fr;
   };
 
   return (
@@ -38,7 +45,7 @@ export default function EntrySection() {
             className="bg-dark rounded-2xl p-5 border border-white/10 hover:border-golden/50 transition-colors"
           >
             <h3 className="text-lg font-bold text-white mb-4">
-              {t(entry.nameKey)}
+              {getLocalizedName(entry)}
             </h3>
             <div className="space-y-2">
               <div className="flex items-center justify-between bg-white/5 rounded-lg px-4 py-2">

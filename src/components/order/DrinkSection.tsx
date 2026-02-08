@@ -1,14 +1,18 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { drinks } from "@/data/menu";
 import { useCartStore } from "@/store/cart-store";
+import type { Drink } from "@/data/menu";
 
-export default function DrinkSection() {
+interface DrinkSectionProps {
+  drinks: Drink[];
+}
+
+export default function DrinkSection({ drinks }: DrinkSectionProps) {
   const t = useTranslations("DrinksAndDesserts");
   const addItem = useCartStore((s) => s.addItem);
 
-  const handleAdd = (drink: (typeof drinks)[0]) => {
+  const handleAdd = (drink: Drink) => {
     addItem({
       type: "drink",
       id: `drink-${drink.id}-${Date.now()}`,

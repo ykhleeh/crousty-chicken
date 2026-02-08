@@ -6,7 +6,7 @@ export type CartItem =
   | {
       type: "dish";
       id: string;
-      menuItemId: number;
+      menuItemId: string;
       nameKey: string;
       size: DishSize;
       price: number;
@@ -17,7 +17,7 @@ export type CartItem =
   | {
       type: "entry";
       id: string;
-      entryItemId: number;
+      entryItemId: string;
       nameKey: string;
       portion: EntryPortion;
       price: number;
@@ -26,7 +26,7 @@ export type CartItem =
   | {
       type: "drink";
       id: string;
-      drinkId: number;
+      drinkId: string;
       name: string;
       price: number;
       quantity: number;
@@ -34,7 +34,7 @@ export type CartItem =
   | {
       type: "dessert";
       id: string;
-      dessertId: number;
+      dessertId: string;
       name: string;
       price: number;
       quantity: number;

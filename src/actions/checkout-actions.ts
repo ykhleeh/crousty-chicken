@@ -2,23 +2,24 @@
 
 import { stripe } from "@/lib/stripe";
 import { createClient } from "@/lib/supabase/server";
-import {
-  menuItems,
-  entryItems,
-  drinks,
-  desserts,
-  addOns,
-} from "@/data/menu";
+import { getProducts } from "@/actions/menu-actions";
+import { addOns } from "@/data/menu";
 import type { CartItem, DishSize } from "@/types/order";
+import type { Product } from "@/types/product";
 
 const COMPOSE_PRICES: Record<DishSize, number> = { M: 9, L: 13, XL: 17 };
 
-function recalculateItemPrice(item: CartItem): number {
+async function recalculateItemPrice(
+  item: CartItem,
+  products: Product[]
+): Promise<number> {
   switch (item.type) {
     case "dish": {
-      const menuItem = menuItems.find((m) => m.id === item.menuItemId);
-      if (!menuItem) throw new Error(`Invalid menu item: ${item.menuItemId}`);
-      const base = menuItem.prices[item.size];
+      const product = products.find((p) => p.id === item.menuItemId);
+      if (!product) throw new Error(`Invalid menu item: ${item.menuItemId}`);
+      const priceKey = `price_${item.size.toLowerCase()}` as keyof Product;
+      const baseCents = (product[priceKey] as number) || 0;
+      const base = baseCents / 100;
       const supp = item.supplements.reduce((sum, s) => {
         const found = addOns.supplements.find((x) => x.name === s);
         return sum + (found?.price ?? 0);
@@ -26,21 +27,24 @@ function recalculateItemPrice(item: CartItem): number {
       return (base + supp) * item.quantity;
     }
     case "entry": {
-      const entry = entryItems.find((e) => e.id === item.entryItemId);
-      if (!entry) throw new Error(`Invalid entry: ${item.entryItemId}`);
-      const price =
-        item.portion === "small" ? entry.small.price : entry.large.price;
+      const product = products.find((p) => p.id === item.entryItemId);
+      if (!product) throw new Error(`Invalid entry: ${item.entryItemId}`);
+      const priceCents =
+        item.portion === "small" ? product.price_small : product.price_large;
+      const price = (priceCents || 0) / 100;
       return price * item.quantity;
     }
     case "drink": {
-      const drink = drinks.find((d) => d.id === item.drinkId);
-      if (!drink) throw new Error(`Invalid drink: ${item.drinkId}`);
-      return drink.price * item.quantity;
+      const product = products.find((p) => p.id === item.drinkId);
+      if (!product) throw new Error(`Invalid drink: ${item.drinkId}`);
+      const price = (product.price || 0) / 100;
+      return price * item.quantity;
     }
     case "dessert": {
-      const dessert = desserts.find((d) => d.id === item.dessertId);
-      if (!dessert) throw new Error(`Invalid dessert: ${item.dessertId}`);
-      return dessert.price * item.quantity;
+      const product = products.find((p) => p.id === item.dessertId);
+      if (!product) throw new Error(`Invalid dessert: ${item.dessertId}`);
+      const price = (product.price || 0) / 100;
+      return price * item.quantity;
     }
     case "compose": {
       const base = COMPOSE_PRICES[item.size];
@@ -64,10 +68,13 @@ export async function createCheckoutSession(
       return { url: null, error: "Cart is empty" };
     }
 
+    // Fetch all products from DB for price validation
+    const products = await getProducts();
+
     // Recalculate total server-side
     let totalCents = 0;
     for (const item of items) {
-      totalCents += Math.round(recalculateItemPrice(item) * 100);
+      totalCents += Math.round((await recalculateItemPrice(item, products)) * 100);
     }
 
     // Create order in Supabase
@@ -91,42 +98,48 @@ export async function createCheckoutSession(
     }
 
     // Build Stripe line items
-    const lineItems = items.map((item) => {
-      const unitAmount = Math.round(
-        (recalculateItemPrice(item) / item.quantity) * 100
-      );
-      let name = "";
-      switch (item.type) {
-        case "dish":
-          name = `${item.nameKey} (${item.size})`;
-          if (item.supplements.length)
-            name += ` + ${item.supplements.join(", ")}`;
-          break;
-        case "entry":
-          name = `${item.nameKey} (${item.portion})`;
-          break;
-        case "drink":
-          name = item.name;
-          break;
-        case "dessert":
-          name = item.name;
-          break;
-        case "compose":
-          name = `Compose (${item.size}) - ${item.base}, ${item.meat}`;
-          if (item.supplements.length)
-            name += ` + ${item.supplements.join(", ")}`;
-          break;
-      }
+    const lineItems = await Promise.all(
+      items.map(async (item) => {
+        const unitAmount = Math.round(
+          ((await recalculateItemPrice(item, products)) / item.quantity) * 100
+        );
+        let name = "";
+        switch (item.type) {
+          case "dish": {
+            const product = products.find((p) => p.id === item.menuItemId);
+            name = `${product?.name_fr || item.nameKey} (${item.size})`;
+            if (item.supplements.length)
+              name += ` + ${item.supplements.join(", ")}`;
+            break;
+          }
+          case "entry": {
+            const product = products.find((p) => p.id === item.entryItemId);
+            name = `${product?.name_fr || item.nameKey} (${item.portion})`;
+            break;
+          }
+          case "drink":
+            name = item.name;
+            break;
+          case "dessert":
+            name = item.name;
+            break;
+          case "compose":
+            name = `Compose (${item.size}) - ${item.base}, ${item.meat}`;
+            if (item.supplements.length)
+              name += ` + ${item.supplements.join(", ")}`;
+            break;
+        }
 
-      return {
-        price_data: {
-          currency: "eur",
-          product_data: { name },
-          unit_amount: unitAmount,
-        },
-        quantity: item.quantity,
-      };
-    });
+        return {
+          price_data: {
+            currency: "eur",
+            product_data: { name },
+            unit_amount: unitAmount,
+          },
+          quantity: item.quantity,
+        };
+      })
+    );
 
     // Create Stripe checkout session
     const baseUrl = (process.env.NEXT_PUBLIC_BASE_URL || "").trim().replace(/[^\x20-\x7E]/g, "");

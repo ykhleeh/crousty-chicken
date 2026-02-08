@@ -1,20 +1,30 @@
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
+import { getAvailableProducts } from "@/actions/menu-actions";
 import {
-  menuItems,
-  entryItems,
-  drinks,
-  desserts,
+  productToMenuItem,
+  productToEntryItem,
+  productToDrink,
+  productToDessert,
   addOns,
-  sauces,
-  toppings,
-  viandes,
 } from "@/data/menu";
 
-export default function MenuDisplay() {
-  const t = useTranslations("Display");
-  const tMenu = useTranslations("Menu");
-  const tEntries = useTranslations("Entries");
-  const tCompose = useTranslations("Compose");
+export default async function MenuDisplay() {
+  const t = await getTranslations("Display");
+  const tEntries = await getTranslations("Entries");
+  const tCompose = await getTranslations("Compose");
+
+  // Fetch all products from database
+  const [dishes, entries, drinksData, dessertsData] = await Promise.all([
+    getAvailableProducts("dish"),
+    getAvailableProducts("entry"),
+    getAvailableProducts("drink"),
+    getAvailableProducts("dessert"),
+  ]);
+
+  const menuItems = dishes.map(productToMenuItem);
+  const entryItems = entries.map(productToEntryItem);
+  const drinks = drinksData.map(productToDrink);
+  const desserts = dessertsData.map(productToDessert);
 
   return (
     <div className="h-screen w-screen overflow-hidden bg-black text-white flex flex-col">
@@ -37,10 +47,10 @@ export default function MenuDisplay() {
               <div key={item.id} className="flex items-baseline justify-between gap-2">
                 <div className="min-w-0">
                   <span className="text-sm font-semibold text-white">
-                    {tMenu(item.nameKey)}
+                    {item.name_fr}
                   </span>
                   <span className="text-xs text-white/50 ml-1.5">
-                    {tMenu(item.descriptionKey)}
+                    {item.description_fr}
                   </span>
                 </div>
                 <div className="shrink-0 text-xs text-golden font-medium whitespace-nowrap">
@@ -72,7 +82,7 @@ export default function MenuDisplay() {
             {entryItems.map((item) => (
               <div key={item.id} className="flex items-baseline justify-between gap-2">
                 <span className="text-sm font-semibold text-white">
-                  {tEntries(item.nameKey)}
+                  {item.name_fr}
                 </span>
                 <span className="shrink-0 text-xs text-golden font-medium whitespace-nowrap">
                   {item.small.qty} {tEntries("pieces")} {item.small.price.toFixed(2)}€
@@ -123,9 +133,11 @@ export default function MenuDisplay() {
           {/* Boissons */}
           <h2 className="font-heading text-lg font-bold text-golden border-b border-golden/30 pb-1.5 mb-2 tracking-wide">
             {t("drinksTitle")}
-            <span className="text-xs font-normal text-golden/60 ml-2">
-              ({drinks[0].price.toFixed(2)}€ {t("each")})
-            </span>
+            {drinks.length > 0 && (
+              <span className="text-xs font-normal text-golden/60 ml-2">
+                ({drinks[0].price.toFixed(2)}€ {t("each")})
+              </span>
+            )}
           </h2>
           <div className="flex flex-col gap-1 mb-4">
             {drinks.map((drink) => (
@@ -139,9 +151,11 @@ export default function MenuDisplay() {
           {/* Desserts */}
           <h2 className="font-heading text-lg font-bold text-golden border-b border-golden/30 pb-1.5 mb-2 tracking-wide">
             {t("dessertsTitle")}
-            <span className="text-xs font-normal text-golden/60 ml-2">
-              ({desserts[0].price.toFixed(2)}€ {t("eachM")})
-            </span>
+            {desserts.length > 0 && (
+              <span className="text-xs font-normal text-golden/60 ml-2">
+                ({desserts[0].price.toFixed(2)}€ {t("eachM")})
+              </span>
+            )}
           </h2>
           <div className="flex flex-col gap-1 mb-4">
             {desserts.map((dessert) => (

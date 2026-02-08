@@ -1,17 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import Image from "next/image";
-import { menuItems, addOns } from "@/data/menu";
+import { addOns, type MenuItem } from "@/data/menu";
 import { useCartStore } from "@/store/cart-store";
 import type { DishSize } from "@/types/order";
 import SizeSelector from "./SizeSelector";
 import SupplementSelector from "./SupplementSelector";
 
-export default function MenuSection() {
+interface MenuSectionProps {
+  menuItems: MenuItem[];
+}
+
+export default function MenuSection({ menuItems }: MenuSectionProps) {
   const t = useTranslations("Menu");
   const tOrder = useTranslations("OrderPage");
+  const locale = useLocale();
   const addItem = useCartStore((s) => s.addItem);
 
   return (
@@ -24,7 +29,7 @@ export default function MenuSection() {
           <MenuItemCard
             key={item.id}
             item={item}
-            tMenu={t}
+            locale={locale}
             tOrder={tOrder}
             onAdd={(size, supplements) => {
               const suppPrice = supplements.reduce((sum, s) => {
@@ -52,12 +57,12 @@ export default function MenuSection() {
 
 function MenuItemCard({
   item,
-  tMenu,
+  locale,
   tOrder,
   onAdd,
 }: {
-  item: (typeof menuItems)[0];
-  tMenu: ReturnType<typeof useTranslations>;
+  item: MenuItem;
+  locale: string;
   tOrder: ReturnType<typeof useTranslations>;
   onAdd: (size: DishSize, supplements: string[]) => void;
 }) {
@@ -81,24 +86,35 @@ function MenuItemCard({
     setShowSupplements(false);
   };
 
+  // Get localized name and description
+  const name =
+    locale === "nl" && item.name_nl
+      ? item.name_nl
+      : locale === "en" && item.name_en
+        ? item.name_en
+        : item.name_fr;
+
+  const description =
+    locale === "nl" && item.description_nl
+      ? item.description_nl
+      : locale === "en" && item.description_en
+        ? item.description_en
+        : item.description_fr;
+
   return (
     <div className="bg-dark rounded-2xl overflow-hidden border border-white/10 hover:border-golden/50 transition-colors flex flex-col">
       <div className="relative h-40 bg-white/5">
         <Image
           src={item.image}
-          alt={tMenu(item.nameKey)}
+          alt={name}
           fill
           className="object-cover"
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
         />
       </div>
       <div className="p-4 flex flex-col flex-1">
-        <h3 className="text-lg font-bold text-white mb-1">
-          {tMenu(item.nameKey)}
-        </h3>
-        <p className="text-white/50 text-xs mb-3 line-clamp-2">
-          {tMenu(item.descriptionKey)}
-        </p>
+        <h3 className="text-lg font-bold text-white mb-1">{name}</h3>
+        <p className="text-white/50 text-xs mb-3 line-clamp-2">{description}</p>
         <div className="mt-auto space-y-3">
           <SizeSelector
             prices={item.prices}

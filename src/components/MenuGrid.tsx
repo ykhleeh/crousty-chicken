@@ -1,9 +1,14 @@
-import { useTranslations } from "next-intl";
-import { menuItems } from "@/data/menu";
+import { getTranslations } from "next-intl/server";
+import { getAvailableProducts } from "@/actions/menu-actions";
+import { productToMenuItem } from "@/data/menu";
 import MenuCard from "./MenuCard";
 
-export default function MenuGrid() {
-  const t = useTranslations("Menu");
+export default async function MenuGrid() {
+  const t = await getTranslations("Menu");
+
+  // Fetch dishes from database
+  const dishes = await getAvailableProducts("dish");
+  const menuItems = dishes.map(productToMenuItem);
 
   return (
     <section id="menu" className="py-20 px-4">

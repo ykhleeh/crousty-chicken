@@ -1,8 +1,20 @@
-import { useTranslations } from "next-intl";
-import { entryItems } from "@/data/menu";
+import { getTranslations, getLocale } from "next-intl/server";
+import { getAvailableProducts } from "@/actions/menu-actions";
+import { productToEntryItem } from "@/data/menu";
 
-export default function Entries() {
-  const t = useTranslations("Entries");
+export default async function Entries() {
+  const t = await getTranslations("Entries");
+  const locale = await getLocale();
+
+  // Fetch entries from database
+  const entries = await getAvailableProducts("entry");
+  const entryItems = entries.map(productToEntryItem);
+
+  const getLocalizedName = (entry: ReturnType<typeof productToEntryItem>) => {
+    if (locale === "nl" && entry.name_nl) return entry.name_nl;
+    if (locale === "en" && entry.name_en) return entry.name_en;
+    return entry.name_fr;
+  };
 
   return (
     <section id="entries" className="py-20 px-4 bg-darker">
@@ -17,7 +29,7 @@ export default function Entries() {
               className="w-full sm:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1rem)] bg-dark rounded-2xl p-6 border border-white/10 hover:border-golden/50 transition-colors"
             >
               <h3 className="text-lg font-bold text-white mb-4">
-                {t(entry.nameKey)}
+                {getLocalizedName(entry)}
               </h3>
               <div className="flex flex-col gap-2 text-sm">
                 <div className="flex items-center justify-between bg-white/5 rounded-lg px-4 py-2">

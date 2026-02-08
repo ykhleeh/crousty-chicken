@@ -3,33 +3,42 @@
 import { useState, useEffect, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
-import { menuItems, entryItems } from "@/data/menu";
+import type { MenuItem, EntryItem } from "@/data/menu";
 
 const SLIDE_DURATION = 8000;
-const TOTAL_SLIDES = 10;
 
-const DISH_TAG_KEYS: Record<string, string> = {
-  original: "originalTags",
-  spicyFries: "spicyFriesTags",
-  vegeFries: "vegeFriesTags",
-  bbqLoverRice: "bbqLoverRiceTags",
-  vegeRice: "vegeRiceTags",
-  bbqLoverFries: "bbqLoverFriesTags",
-  spicyRice: "spicyRiceTags",
-  fiftyFiftyBox: "fiftyFiftyBoxTags",
-};
+interface MenuSlideshowProps {
+  menuItems: MenuItem[];
+  entryItems: EntryItem[];
+}
 
 function formatPrice(price: number): string {
   return price.toFixed(2).replace(".", ",") + "€";
 }
 
-/* ─── Dish Slide (slides 1-8) ─── */
-function DishSlide({ index, active }: { index: number; active: boolean }) {
-  const tMenu = useTranslations("Menu");
+/* ─── Dish Slide ─── */
+function DishSlide({
+  item,
+  active,
+}: {
+  item: MenuItem;
+  active: boolean;
+}) {
   const tSlideshow = useTranslations("Slideshow");
-  const item = menuItems[index];
 
-  const tagsKey = DISH_TAG_KEYS[item.nameKey];
+  // Map name to tag keys for slideshow
+  const DISH_TAG_KEYS: Record<string, string> = {
+    "L'Original": "originalTags",
+    "Spicy fries": "spicyFriesTags",
+    "Vege fries": "vegeFriesTags",
+    "BBQ Lover rice": "bbqLoverRiceTags",
+    "Vege rice": "vegeRiceTags",
+    "BBQ Lover fries": "bbqLoverFriesTags",
+    "Spicy rice": "spicyRiceTags",
+    "50/50 Box": "fiftyFiftyBoxTags",
+  };
+
+  const tagsKey = DISH_TAG_KEYS[item.name_fr] || "originalTags";
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const tagsString = tSlideshow(tagsKey as any) as string;
   const tags = tagsString.split(",").map((t) => t.trim());
@@ -47,21 +56,21 @@ function DishSlide({ index, active }: { index: number; active: boolean }) {
         <div className="relative w-[55%] h-[70%] rounded-3xl overflow-hidden shadow-2xl shrink-0">
           <Image
             src={item.image}
-            alt={tMenu(item.nameKey)}
+            alt={item.name_fr}
             fill
             className="object-cover"
             sizes="55vw"
-            priority={index === 0}
+            priority
           />
         </div>
 
         {/* Info */}
         <div className="flex flex-col justify-center flex-1 min-w-0">
           <h2 className="font-heading text-5xl xl:text-6xl font-extrabold text-golden mb-6 leading-tight">
-            {tMenu(item.nameKey)}
+            {item.name_fr}
           </h2>
           <p className="text-xl xl:text-2xl text-white/80 leading-relaxed mb-8">
-            {tMenu(item.descriptionKey)}
+            {item.description_fr}
           </p>
 
           {/* Prices */}
@@ -103,8 +112,14 @@ function DishSlide({ index, active }: { index: number; active: boolean }) {
   );
 }
 
-/* ─── Entries Slide (slide 9) ─── */
-function EntriesSlide({ active }: { active: boolean }) {
+/* ─── Entries Slide ─── */
+function EntriesSlide({
+  entryItems,
+  active,
+}: {
+  entryItems: EntryItem[];
+  active: boolean;
+}) {
   const tEntries = useTranslations("Entries");
   const tSlideshow = useTranslations("Slideshow");
 
@@ -127,14 +142,9 @@ function EntriesSlide({ active }: { active: boolean }) {
             className="bg-white/5 border border-white/10 rounded-2xl p-8 w-[260px] flex flex-col items-center"
           >
             <h3 className="text-2xl font-bold text-white mb-1 text-center">
-              {tEntries(entry.nameKey)}
+              {entry.name_fr}
             </h3>
-            {tEntries(entry.nameKey + "Desc") && (
-              <p className="text-white/50 text-sm mb-4 text-center">
-                {tEntries(entry.nameKey + "Desc")}
-              </p>
-            )}
-            {!tEntries(entry.nameKey + "Desc") && <div className="mb-4" />}
+            <div className="mb-4" />
 
             <div className="w-full space-y-2">
               <div className="flex justify-between items-center bg-white/5 rounded-lg px-4 py-2">
@@ -161,7 +171,7 @@ function EntriesSlide({ active }: { active: boolean }) {
   );
 }
 
-/* ─── Compose Slide (slide 10) ─── */
+/* ─── Compose Slide ─── */
 function ComposeSlide({ active }: { active: boolean }) {
   const t = useTranslations("Slideshow");
 
@@ -232,12 +242,13 @@ function ProgressBar({ slideIndex }: { slideIndex: number }) {
 }
 
 /* ─── Main Slideshow ─── */
-export default function MenuSlideshow() {
+export default function MenuSlideshow({ menuItems, entryItems }: MenuSlideshowProps) {
+  const totalSlides = menuItems.length + 2; // dishes + entries slide + compose slide
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const advance = useCallback(() => {
-    setCurrentSlide((prev) => (prev + 1) % TOTAL_SLIDES);
-  }, []);
+    setCurrentSlide((prev) => (prev + 1) % totalSlides);
+  }, [totalSlides]);
 
   useEffect(() => {
     const interval = setInterval(advance, SLIDE_DURATION);
@@ -256,16 +267,16 @@ export default function MenuSlideshow() {
         }
       `}</style>
 
-      {/* Dish slides (0-7) */}
-      {menuItems.map((_, i) => (
-        <DishSlide key={i} index={i} active={currentSlide === i} />
+      {/* Dish slides */}
+      {menuItems.map((item, i) => (
+        <DishSlide key={item.id} item={item} active={currentSlide === i} />
       ))}
 
-      {/* Entries slide (8) */}
-      <EntriesSlide active={currentSlide === 8} />
+      {/* Entries slide */}
+      <EntriesSlide entryItems={entryItems} active={currentSlide === menuItems.length} />
 
-      {/* Compose slide (9) */}
-      <ComposeSlide active={currentSlide === 9} />
+      {/* Compose slide */}
+      <ComposeSlide active={currentSlide === menuItems.length + 1} />
 
       {/* Progress bar */}
       <ProgressBar key={currentSlide} slideIndex={currentSlide} />

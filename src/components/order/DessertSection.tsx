@@ -1,14 +1,18 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { desserts } from "@/data/menu";
 import { useCartStore } from "@/store/cart-store";
+import type { Dessert } from "@/data/menu";
 
-export default function DessertSection() {
+interface DessertSectionProps {
+  desserts: Dessert[];
+}
+
+export default function DessertSection({ desserts }: DessertSectionProps) {
   const t = useTranslations("DrinksAndDesserts");
   const addItem = useCartStore((s) => s.addItem);
 
-  const handleAdd = (dessert: (typeof desserts)[0]) => {
+  const handleAdd = (dessert: Dessert) => {
     addItem({
       type: "dessert",
       id: `dessert-${dessert.id}-${Date.now()}`,
