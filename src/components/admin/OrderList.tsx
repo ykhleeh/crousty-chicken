@@ -7,7 +7,7 @@ import { getOrders } from "@/actions/admin-actions";
 import OrderCard from "./OrderCard";
 import type { Order, OrderStatus } from "@/types/order";
 
-const FILTERS: (OrderStatus | "all")[] = ["all", "paid", "preparing", "ready"];
+const FILTERS: (OrderStatus | "all")[] = ["all", "pending_payment", "paid", "preparing", "ready"];
 
 export default function OrderList() {
   const t = useTranslations("Admin");
@@ -83,7 +83,7 @@ export default function OrderList() {
       ) : (
         <div className="space-y-4">
           {orders.map((order) => (
-            <OrderCard key={order.id} order={order} />
+            <OrderCard key={order.id} order={order} onRefresh={fetchOrders} />
           ))}
         </div>
       )}

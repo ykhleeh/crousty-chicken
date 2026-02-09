@@ -30,6 +30,12 @@ export default function AdminHeader() {
             >
               {t("menuTitle")}
             </Link>
+            <Link
+              href={`/${locale}/admin/kiosk/setup`}
+              className="text-white/50 hover:text-white transition-colors text-sm"
+            >
+              {t("kioskTitle")}
+            </Link>
           </nav>
         </div>
         <button

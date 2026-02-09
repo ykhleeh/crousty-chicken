@@ -11,9 +11,10 @@ import { useEffect, useState } from "react";
 interface CartDrawerProps {
   open: boolean;
   onClose: () => void;
+  customCheckout?: React.ReactNode;
 }
 
-export default function CartDrawer({ open, onClose }: CartDrawerProps) {
+export default function CartDrawer({ open, onClose, customCheckout }: CartDrawerProps) {
   const t = useTranslations("Cart");
   const locale = useLocale();
   const items = useCartStore((s) => s.items);
@@ -69,21 +70,33 @@ export default function CartDrawer({ open, onClose }: CartDrawerProps) {
           {items.length > 0 && (
             <div className="p-4 border-t border-white/10">
               <CartSummary />
-              <div className="flex gap-2 mt-4">
-                <button
-                  onClick={clearCart}
-                  className="flex-1 py-3 rounded-xl border border-white/20 text-white/70 hover:text-white hover:border-white/40 transition-colors text-sm font-medium"
-                >
-                  {t("clear")}
-                </button>
-                <Link
-                  href={`/${locale}/order/checkout`}
-                  onClick={onClose}
-                  className="flex-1 bg-golden hover:bg-golden-dark text-black font-bold py-3 rounded-xl transition-colors text-sm text-center"
-                >
-                  {t("checkout")}
-                </Link>
-              </div>
+              {customCheckout ? (
+                <div className="mt-4">
+                  <button
+                    onClick={clearCart}
+                    className="w-full py-2 mb-3 rounded-xl border border-white/20 text-white/70 hover:text-white hover:border-white/40 transition-colors text-sm font-medium"
+                  >
+                    {t("clear")}
+                  </button>
+                  {customCheckout}
+                </div>
+              ) : (
+                <div className="flex gap-2 mt-4">
+                  <button
+                    onClick={clearCart}
+                    className="flex-1 py-3 rounded-xl border border-white/20 text-white/70 hover:text-white hover:border-white/40 transition-colors text-sm font-medium"
+                  >
+                    {t("clear")}
+                  </button>
+                  <Link
+                    href={`/${locale}/order/checkout`}
+                    onClick={onClose}
+                    className="flex-1 bg-golden hover:bg-golden-dark text-black font-bold py-3 rounded-xl transition-colors text-sm text-center"
+                  >
+                    {t("checkout")}
+                  </Link>
+                </div>
+              )}
             </div>
           )}
         </div>

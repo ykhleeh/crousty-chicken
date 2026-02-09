@@ -21,7 +21,7 @@ export default function Location() {
               <h3 className="text-xl font-bold text-white mb-2">
                 🕐 {t("hoursTitle")}
               </h3>
-              <p className="text-white/70">{t("hours")}</p>
+              <p className="text-white/70 whitespace-pre-line">{t("hours")}</p>
             </div>
 
             <div>
@@ -30,12 +30,17 @@ export default function Location() {
             </div>
           </div>
 
-          <div className="bg-white/5 rounded-2xl overflow-hidden border border-white/10 min-h-[300px] flex items-center justify-center">
-            <div className="text-center text-white/30 p-8">
-              <div className="text-6xl mb-4">🗺️</div>
-              <p className="text-sm">Google Maps Embed Placeholder</p>
-              <p className="text-xs mt-1">Bruxelles, Belgique</p>
-            </div>
+          <div className="rounded-2xl overflow-hidden border border-white/10">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2517.5698451229628!2d4.390031776369791!3d50.87616277167666!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47c3c3695d0ed1f5%3A0xb21d4fa0756fb41c!2sCrousty%20Chicken!5e0!3m2!1sfr!2sbe!4v1770599169582!5m2!1sfr!2sbe"
+              width="100%"
+              height="300"
+              style={{ border: 0 }}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              title="Crousty Chicken - Google Maps"
+            />
           </div>
         </div>
       </div>

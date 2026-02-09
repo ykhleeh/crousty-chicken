@@ -21,6 +21,7 @@ export default function EntrySection({ entryItems }: EntrySectionProps) {
       id: `entry-${entry.id}-${portion}-${Date.now()}`,
       entryItemId: entry.id,
       nameKey: entry.nameKey,
+      name: getLocalizedName(entry),
       portion,
       price,
       quantity: 1,

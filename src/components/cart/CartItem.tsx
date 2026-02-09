@@ -9,17 +9,19 @@ interface CartItemProps {
 }
 
 export default function CartItem({ item }: CartItemProps) {
-  const tMenu = useTranslations("Menu");
-  const tEntries = useTranslations("Entries");
   const tCart = useTranslations("Cart");
   const { updateQuantity, removeItem } = useCartStore();
 
   const getName = () => {
     switch (item.type) {
       case "dish":
-        return `${tMenu(item.nameKey)} (${item.size})`;
+        // Use stored name if available, otherwise fallback to nameKey (may be UUID from old cart items)
+        const dishName = item.name || item.nameKey;
+        return `${dishName} (${item.size})`;
       case "entry":
-        return `${tEntries(item.nameKey)} (${item.portion === "small" ? tCart("small") : tCart("large")})`;
+        // Use stored name if available, otherwise fallback to nameKey
+        const entryName = item.name || item.nameKey;
+        return `${entryName} (${item.portion === "small" ? tCart("small") : tCart("large")})`;
       case "drink":
         return item.name;
       case "dessert":

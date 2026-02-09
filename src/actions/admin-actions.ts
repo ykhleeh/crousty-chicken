@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import type { Order, OrderStatus } from "@/types/order";
 
 const VALID_TRANSITIONS: Record<string, string[]> = {
+  pending_payment: ["paid"],
   paid: ["preparing"],
   preparing: ["ready"],
 };
@@ -80,7 +81,8 @@ export async function getOrders(
     if (statusFilter) {
       query = query.eq("status", statusFilter);
     } else {
-      query = query.neq("status", "pending");
+      // Show all orders except pending (online orders waiting for Stripe)
+      query = query.not("status", "eq", "pending");
     }
 
     const { data, error } = await query;
@@ -112,5 +114,51 @@ export async function toggleClickCollect(
     return { success: !error };
   } catch {
     return { success: false };
+  }
+}
+
+export async function markOrderAsPaid(
+  orderId: string
+): Promise<{ success: boolean; error: string | null }> {
+  try {
+    const supabase = await createClient();
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) {
+      return { success: false, error: "Unauthorized" };
+    }
+
+    // Check order exists and is pending_payment
+    const { data: order } = await supabase
+      .from("orders")
+      .select("status, order_type")
+      .eq("id", orderId)
+      .single();
+
+    if (!order) {
+      return { success: false, error: "Order not found" };
+    }
+
+    if (order.status !== "pending_payment") {
+      return {
+        success: false,
+        error: `Cannot mark as paid: order status is ${order.status}`,
+      };
+    }
+
+    const { error } = await supabase
+      .from("orders")
+      .update({ status: "paid", updated_at: new Date().toISOString() })
+      .eq("id", orderId);
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    return { success: true, error: null };
+  } catch {
+    return { success: false, error: "Service unavailable" };
   }
 }

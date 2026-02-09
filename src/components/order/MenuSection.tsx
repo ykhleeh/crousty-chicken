@@ -31,7 +31,7 @@ export default function MenuSection({ menuItems }: MenuSectionProps) {
             item={item}
             locale={locale}
             tOrder={tOrder}
-            onAdd={(size, supplements) => {
+            onAdd={(size, supplements, displayName) => {
               const suppPrice = supplements.reduce((sum, s) => {
                 const supp = addOns.supplements.find((x) => x.name === s);
                 return sum + (supp?.price ?? 0);
@@ -41,6 +41,7 @@ export default function MenuSection({ menuItems }: MenuSectionProps) {
                 id: `dish-${item.id}-${size}-${Date.now()}`,
                 menuItemId: item.id,
                 nameKey: item.nameKey,
+                name: displayName,
                 size,
                 price: item.prices[size],
                 quantity: 1,
@@ -64,7 +65,7 @@ function MenuItemCard({
   item: MenuItem;
   locale: string;
   tOrder: ReturnType<typeof useTranslations>;
-  onAdd: (size: DishSize, supplements: string[]) => void;
+  onAdd: (size: DishSize, supplements: string[], displayName: string) => void;
 }) {
   const [selectedSize, setSelectedSize] = useState<DishSize | null>(
     item.singlePrice ? "M" : null
@@ -80,7 +81,7 @@ function MenuItemCard({
 
   const handleAdd = () => {
     if (!selectedSize) return;
-    onAdd(selectedSize, supplements);
+    onAdd(selectedSize, supplements, name);
     setSelectedSize(item.singlePrice ? "M" : null);
     setSupplements([]);
     setShowSupplements(false);
