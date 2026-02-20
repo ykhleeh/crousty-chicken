@@ -177,10 +177,26 @@
     "paidDesc": "Je bestelling is ontvangen. Het restaurant begint binnenkort met de bereiding.",
     "preparingDesc": "Je bestelling wordt bereid!",
     "readyDesc": "Je bestelling is klaar! Kom ze ophalen.",
+    "pendingPaymentDesc": "Ga naar de toonbank om je bestelling te betalen.",
     "orderDetails": "Bestellingsdetails",
     "orderNumber": "Bestelnummer",
     "customerName": "Naam",
-    "total": "Totaal"
+    "total": "Totaal",
+    "orderItems": "Bestelde artikelen",
+    "sizeSmall": "Klein",
+    "sizeLarge": "Groot",
+    "composeItem": "Gepersonaliseerde Crousty"
+  },
+  "Track": {
+    "title": "Mijn bestelling volgen",
+    "subtitle": "Voer je bestelnummer in",
+    "orderNumberLabel": "Bestelnummer",
+    "orderNumberPlaceholder": "Bv. 42",
+    "search": "Zoeken",
+    "searching": "Zoeken...",
+    "invalidNumber": "Voer een geldig bestelnummer in",
+    "notFound": "Bestelling niet gevonden. Controleer het nummer en probeer opnieuw.",
+    "backHome": "Terug naar home"
   },
   "Admin": {
     "loginTitle": "Administratie",
@@ -206,6 +222,7 @@
     "updating": "Bijwerken...",
     "menuTitle": "Menu Beheer",
     "kioskTitle": "Kiosk Terminals",
+    "kitchenTitle": "Keuken",
     "backToOrders": "Bestellingen"
   },
   "AdminMenu": {
@@ -313,6 +330,7 @@
     "ticketSubInstruction": "om te betalen en je bestelling op te halen",
     "total": "Totaal",
     "newOrder": "Nieuwe bestelling",
+    "scanToTrack": "Scan om je bestelling te volgen",
     "accessDenied": "Toegang geweigerd",
     "accessDeniedDesc": "Dit apparaat is niet geautoriseerd om de kioskmodus te gebruiken.",
     "invalidToken": "Ongeldig token",
@@ -321,6 +339,21 @@
     "welcomeSubtitle": "De beste krokante kip van Brussel",
     "tapToStart": "Tik op het scherm om te beginnen",
     "reenterFullscreen": "Tik hier om terug te keren naar volledig scherm"
+  },
+  "Kitchen": {
+    "title": "KEUKEN",
+    "backToDashboard": "Terug naar dashboard",
+    "sound": "Geluid",
+    "fullscreen": "Volledig scherm",
+    "loading": "Laden...",
+    "noOrders": "Geen bestellingen te bereiden",
+    "sectionNew": "NIEUWE BESTELLINGEN",
+    "sectionPreparing": "IN BEREIDING",
+    "statusNew": "NIEUW",
+    "statusPreparing": "IN BEREIDING",
+    "markPreparing": "STARTEN",
+    "markReady": "KLAAR",
+    "updating": "Bijwerken..."
   },
   "AdminKiosk": {
     "pageTitle": "Kiosk Terminals",

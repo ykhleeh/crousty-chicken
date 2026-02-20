@@ -177,10 +177,26 @@
     "paidDesc": "Votre commande a été reçue. Le restaurant va bientôt la préparer.",
     "preparingDesc": "Votre commande est en cours de préparation !",
     "readyDesc": "Votre commande est prête ! Venez la récupérer.",
+    "pendingPaymentDesc": "Veuillez vous présenter au comptoir pour régler votre commande.",
     "orderDetails": "Détails de la commande",
     "orderNumber": "N° de commande",
     "customerName": "Nom",
-    "total": "Total"
+    "total": "Total",
+    "orderItems": "Articles commandés",
+    "sizeSmall": "Petit",
+    "sizeLarge": "Grand",
+    "composeItem": "Crousty personnalisé"
+  },
+  "Track": {
+    "title": "Suivre ma commande",
+    "subtitle": "Entrez votre numéro de commande",
+    "orderNumberLabel": "Numéro de commande",
+    "orderNumberPlaceholder": "Ex: 42",
+    "search": "Rechercher",
+    "searching": "Recherche...",
+    "invalidNumber": "Veuillez entrer un numéro de commande valide",
+    "notFound": "Commande introuvable. Vérifiez le numéro et réessayez.",
+    "backHome": "Retour à l'accueil"
   },
   "Admin": {
     "loginTitle": "Administration",
@@ -206,6 +222,7 @@
     "updating": "Mise à jour...",
     "menuTitle": "Gestion du Menu",
     "kioskTitle": "Terminals Kiosk",
+    "kitchenTitle": "Cuisine",
     "backToOrders": "Commandes"
   },
   "AdminMenu": {
@@ -313,6 +330,7 @@
     "ticketSubInstruction": "pour régler et récupérer votre commande",
     "total": "Total",
     "newOrder": "Nouvelle commande",
+    "scanToTrack": "Scannez pour suivre votre commande",
     "accessDenied": "Accès refusé",
     "accessDeniedDesc": "Ce terminal n'est pas autorisé à accéder au mode kiosk.",
     "invalidToken": "Token invalide",
@@ -321,6 +339,21 @@
     "welcomeSubtitle": "Le meilleur poulet croustillant de Bruxelles",
     "tapToStart": "Touchez l'écran pour commencer",
     "reenterFullscreen": "Touchez ici pour revenir en plein écran"
+  },
+  "Kitchen": {
+    "title": "CUISINE",
+    "backToDashboard": "Retour au dashboard",
+    "sound": "Son",
+    "fullscreen": "Plein écran",
+    "loading": "Chargement...",
+    "noOrders": "Aucune commande à préparer",
+    "sectionNew": "NOUVELLES COMMANDES",
+    "sectionPreparing": "EN PRÉPARATION",
+    "statusNew": "NOUVELLE",
+    "statusPreparing": "EN PRÉPARATION",
+    "markPreparing": "EN PRÉPARATION",
+    "markReady": "PRÊTE",
+    "updating": "Mise à jour..."
   },
   "AdminKiosk": {
     "pageTitle": "Terminals Kiosk",

@@ -36,6 +36,12 @@ export default function AdminHeader() {
             >
               {t("kioskTitle")}
             </Link>
+            <Link
+              href={`/${locale}/admin/kitchen`}
+              className="text-white/50 hover:text-white transition-colors text-sm"
+            >
+              {t("kitchenTitle")}
+            </Link>
           </nav>
         </div>
         <button

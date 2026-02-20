@@ -117,6 +117,37 @@ export async function toggleClickCollect(
   }
 }
 
+export async function getKitchenOrders(): Promise<Order[]> {
+  try {
+    const supabase = await createClient();
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      return [];
+    }
+
+    // Fetch only "paid" and "preparing" orders, ordered by created_at (oldest first)
+    const { data, error } = await supabase
+      .from("orders")
+      .select("*")
+      .in("status", ["paid", "preparing"])
+      .order("created_at", { ascending: true });
+
+    if (error) {
+      console.error("getKitchenOrders error:", error);
+      return [];
+    }
+
+    return (data as Order[]) || [];
+  } catch (e) {
+    console.error("getKitchenOrders - error:", e);
+    return [];
+  }
+}
+
 export async function markOrderAsPaid(
   orderId: string
 ): Promise<{ success: boolean; error: string | null }> {

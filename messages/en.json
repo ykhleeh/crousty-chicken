@@ -177,10 +177,26 @@
     "paidDesc": "Your order has been received. The restaurant will start preparing it soon.",
     "preparingDesc": "Your order is being prepared!",
     "readyDesc": "Your order is ready! Come pick it up.",
+    "pendingPaymentDesc": "Please go to the counter to pay for your order.",
     "orderDetails": "Order details",
     "orderNumber": "Order #",
     "customerName": "Name",
-    "total": "Total"
+    "total": "Total",
+    "orderItems": "Order items",
+    "sizeSmall": "Small",
+    "sizeLarge": "Large",
+    "composeItem": "Custom Crousty"
+  },
+  "Track": {
+    "title": "Track my order",
+    "subtitle": "Enter your order number",
+    "orderNumberLabel": "Order number",
+    "orderNumberPlaceholder": "E.g. 42",
+    "search": "Search",
+    "searching": "Searching...",
+    "invalidNumber": "Please enter a valid order number",
+    "notFound": "Order not found. Please check the number and try again.",
+    "backHome": "Back to home"
   },
   "Admin": {
     "loginTitle": "Administration",
@@ -206,6 +222,7 @@
     "updating": "Updating...",
     "menuTitle": "Menu Management",
     "kioskTitle": "Kiosk Terminals",
+    "kitchenTitle": "Kitchen",
     "backToOrders": "Orders"
   },
   "AdminMenu": {
@@ -313,6 +330,7 @@
     "ticketSubInstruction": "to pay and collect your order",
     "total": "Total",
     "newOrder": "New order",
+    "scanToTrack": "Scan to track your order",
     "accessDenied": "Access denied",
     "accessDeniedDesc": "This device is not authorized to access kiosk mode.",
     "invalidToken": "Invalid token",
@@ -321,6 +339,21 @@
     "welcomeSubtitle": "The best crispy chicken in Brussels",
     "tapToStart": "Tap the screen to start",
     "reenterFullscreen": "Tap here to return to fullscreen"
+  },
+  "Kitchen": {
+    "title": "KITCHEN",
+    "backToDashboard": "Back to dashboard",
+    "sound": "Sound",
+    "fullscreen": "Fullscreen",
+    "loading": "Loading...",
+    "noOrders": "No orders to prepare",
+    "sectionNew": "NEW ORDERS",
+    "sectionPreparing": "PREPARING",
+    "statusNew": "NEW",
+    "statusPreparing": "PREPARING",
+    "markPreparing": "START PREPARING",
+    "markReady": "READY",
+    "updating": "Updating..."
   },
   "AdminKiosk": {
     "pageTitle": "Kiosk Terminals",
