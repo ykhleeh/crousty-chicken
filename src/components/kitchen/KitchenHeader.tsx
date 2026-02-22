@@ -7,12 +7,14 @@ import Link from "next/link";
 interface KitchenHeaderProps {
   soundEnabled: boolean;
   onToggleSound: () => void;
+  onTestSound?: () => void;
   realtimeStatus?: string;
 }
 
 export default function KitchenHeader({
   soundEnabled,
   onToggleSound,
+  onTestSound,
   realtimeStatus,
 }: KitchenHeaderProps) {
   const t = useTranslations("Kitchen");
@@ -106,6 +108,16 @@ export default function KitchenHeader({
               {t("sound")}: {soundEnabled ? "ON" : "OFF"}
             </span>
           </button>
+
+          {onTestSound && (
+            <button
+              onClick={onTestSound}
+              className="flex items-center gap-2 px-3 py-2 rounded-xl bg-golden/20 text-golden border border-golden/30 hover:bg-golden/30 transition-colors"
+            >
+              <span className="text-lg">🔔</span>
+              <span className="text-sm font-medium">Test</span>
+            </button>
+          )}
 
           <button
             onClick={toggleFullscreen}

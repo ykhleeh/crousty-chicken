@@ -29,6 +29,41 @@ export default function KitchenDisplay() {
     return data;
   }, []);
 
+  // Play beep sound
+  const playBeep = useCallback((frequency: number = 800, duration: number = 0.5) => {
+    try {
+      const audioContext = audioContextRef.current;
+      if (!audioContext) {
+        console.log("[Kitchen] No audio context");
+        return;
+      }
+
+      // Resume context if suspended
+      if (audioContext.state === "suspended") {
+        audioContext.resume();
+      }
+
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+
+      oscillator.frequency.value = frequency;
+      oscillator.type = "sine";
+
+      gainNode.gain.setValueAtTime(0.7, audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + duration);
+
+      console.log("[Kitchen] Beep played at", frequency, "Hz");
+    } catch (e) {
+      console.error("[Kitchen] Beep error:", e);
+    }
+  }, []);
+
   // Unlock audio on user interaction
   const unlockSound = useCallback(() => {
     try {
@@ -36,54 +71,36 @@ export default function KitchenDisplay() {
         (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
       audioContextRef.current = new AudioContextClass();
 
-      // Play a silent sound to unlock audio
-      const oscillator = audioContextRef.current.createOscillator();
-      const gainNode = audioContextRef.current.createGain();
-      gainNode.gain.value = 0;
-      oscillator.connect(gainNode);
-      gainNode.connect(audioContextRef.current.destination);
-      oscillator.start();
-      oscillator.stop(audioContextRef.current.currentTime + 0.1);
+      // Resume if needed
+      if (audioContextRef.current.state === "suspended") {
+        audioContextRef.current.resume();
+      }
+
+      // Play an audible confirmation beep
+      setTimeout(() => {
+        playBeep(600, 0.15);
+        setTimeout(() => playBeep(800, 0.15), 150);
+        setTimeout(() => playBeep(1000, 0.2), 300);
+      }, 100);
 
       setSoundUnlocked(true);
-      console.log("[Kitchen] Sound unlocked!");
+      console.log("[Kitchen] Sound unlocked! State:", audioContextRef.current.state);
     } catch (e) {
       console.error("[Kitchen] Failed to unlock sound:", e);
     }
-  }, []);
+  }, [playBeep]);
 
   const playNotificationSound = useCallback(() => {
+    console.log("[Kitchen] playNotificationSound called - enabled:", soundEnabled, "unlocked:", soundUnlocked);
+
     if (!soundEnabled || !soundUnlocked) {
-      console.log("[Kitchen] Sound skipped - enabled:", soundEnabled, "unlocked:", soundUnlocked);
       return;
     }
 
-    try {
-      const AudioContextClass = window.AudioContext ||
-        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-      const audioContext = audioContextRef.current || new AudioContextClass();
-
-      // Create a beep sound
-      const oscillator = audioContext.createOscillator();
-      const gainNode = audioContext.createGain();
-
-      oscillator.connect(gainNode);
-      gainNode.connect(audioContext.destination);
-
-      oscillator.frequency.value = 800;
-      oscillator.type = "sine";
-
-      gainNode.gain.setValueAtTime(0.5, audioContext.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
-
-      oscillator.start(audioContext.currentTime);
-      oscillator.stop(audioContext.currentTime + 0.5);
-
-      console.log("[Kitchen] Sound played!");
-    } catch (e) {
-      console.error("[Kitchen] Could not play notification sound:", e);
-    }
-  }, [soundEnabled, soundUnlocked]);
+    // Play a "ding-dong" notification
+    playBeep(880, 0.2);
+    setTimeout(() => playBeep(1100, 0.3), 200);
+  }, [soundEnabled, soundUnlocked, playBeep]);
 
   // Initial fetch
   useEffect(() => {
@@ -220,6 +237,7 @@ export default function KitchenDisplay() {
       <KitchenHeader
         soundEnabled={soundEnabled}
         onToggleSound={toggleSound}
+        onTestSound={playNotificationSound}
         realtimeStatus={realtimeStatus}
       />
 
