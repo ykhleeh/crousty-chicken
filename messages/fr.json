@@ -353,7 +353,9 @@
     "statusPreparing": "EN PRÉPARATION",
     "markPreparing": "EN PRÉPARATION",
     "markReady": "PRÊTE",
-    "updating": "Mise à jour..."
+    "updating": "Mise à jour...",
+    "clickToStart": "Activer l'écran cuisine",
+    "clickToStartDesc": "Cliquez pour activer les notifications sonores"
   },
   "AdminKiosk": {
     "pageTitle": "Terminals Kiosk",

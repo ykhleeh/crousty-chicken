@@ -353,7 +353,9 @@
     "statusPreparing": "IN BEREIDING",
     "markPreparing": "STARTEN",
     "markReady": "KLAAR",
-    "updating": "Bijwerken..."
+    "updating": "Bijwerken...",
+    "clickToStart": "Activeer keukenweergave",
+    "clickToStartDesc": "Klik om geluidsmeldingen in te schakelen"
   },
   "AdminKiosk": {
     "pageTitle": "Kiosk Terminals",

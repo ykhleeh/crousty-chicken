@@ -13,51 +13,75 @@ export default function KitchenDisplay() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [soundEnabled, setSoundEnabled] = useState(true);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [soundUnlocked, setSoundUnlocked] = useState(false);
+  const [realtimeStatus, setRealtimeStatus] = useState<string>("connecting");
+  const audioContextRef = useRef<AudioContext | null>(null);
   const previousOrderIdsRef = useRef<Set<string>>(new Set());
 
   const fetchOrders = useCallback(async () => {
+    console.log("[Kitchen] Fetching orders...");
     const data = await getKitchenOrders();
+    console.log("[Kitchen] Fetched orders:", data.length);
     setOrders(data);
     setLoading(false);
     return data;
   }, []);
 
-  const playNotificationSound = useCallback(() => {
-    if (!soundEnabled) return;
+  // Unlock audio on user interaction
+  const unlockSound = useCallback(() => {
+    try {
+      const AudioContextClass = window.AudioContext ||
+        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      audioContextRef.current = new AudioContextClass();
 
-    // Try to play the audio file first
-    if (audioRef.current) {
-      audioRef.current.currentTime = 0;
-      audioRef.current.play().catch(() => {
-        // Fallback to Web Audio API if file doesn't exist
-        try {
-          const audioContext = new (window.AudioContext ||
-            (window as unknown as { webkitAudioContext: typeof AudioContext })
-              .webkitAudioContext)();
-          const oscillator = audioContext.createOscillator();
-          const gainNode = audioContext.createGain();
+      // Play a silent sound to unlock audio
+      const oscillator = audioContextRef.current.createOscillator();
+      const gainNode = audioContextRef.current.createGain();
+      gainNode.gain.value = 0;
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContextRef.current.destination);
+      oscillator.start();
+      oscillator.stop(audioContextRef.current.currentTime + 0.1);
 
-          oscillator.connect(gainNode);
-          gainNode.connect(audioContext.destination);
-
-          oscillator.frequency.value = 800;
-          oscillator.type = "sine";
-
-          gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-          gainNode.gain.exponentialRampToValueAtTime(
-            0.01,
-            audioContext.currentTime + 0.3
-          );
-
-          oscillator.start(audioContext.currentTime);
-          oscillator.stop(audioContext.currentTime + 0.3);
-        } catch (e) {
-          console.log("Could not play notification sound:", e);
-        }
-      });
+      setSoundUnlocked(true);
+      console.log("[Kitchen] Sound unlocked!");
+    } catch (e) {
+      console.error("[Kitchen] Failed to unlock sound:", e);
     }
-  }, [soundEnabled]);
+  }, []);
+
+  const playNotificationSound = useCallback(() => {
+    if (!soundEnabled || !soundUnlocked) {
+      console.log("[Kitchen] Sound skipped - enabled:", soundEnabled, "unlocked:", soundUnlocked);
+      return;
+    }
+
+    try {
+      const AudioContextClass = window.AudioContext ||
+        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      const audioContext = audioContextRef.current || new AudioContextClass();
+
+      // Create a beep sound
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+
+      oscillator.frequency.value = 800;
+      oscillator.type = "sine";
+
+      gainNode.gain.setValueAtTime(0.5, audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + 0.5);
+
+      console.log("[Kitchen] Sound played!");
+    } catch (e) {
+      console.error("[Kitchen] Could not play notification sound:", e);
+    }
+  }, [soundEnabled, soundUnlocked]);
 
   // Initial fetch
   useEffect(() => {
@@ -116,7 +140,8 @@ export default function KitchenDisplay() {
         }
       )
       .subscribe((status) => {
-        console.log("Kitchen realtime subscription status:", status);
+        console.log("[Kitchen] Realtime subscription status:", status);
+        setRealtimeStatus(status);
       });
 
     return () => {
@@ -142,18 +167,34 @@ export default function KitchenDisplay() {
     );
   }
 
+  // Show unlock modal if sound not unlocked
+  if (!soundUnlocked) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-golden text-4xl font-bold mb-6">
+            {t("title")}
+          </h1>
+          <button
+            onClick={unlockSound}
+            className="bg-golden hover:bg-golden-dark text-black font-bold text-2xl px-12 py-6 rounded-2xl transition-colors"
+          >
+            {t("clickToStart")}
+          </button>
+          <p className="text-white/50 mt-4 text-lg">
+            {t("clickToStartDesc")}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-black">
-      {/* Hidden audio element for notification sound */}
-      <audio
-        ref={audioRef}
-        src="/sounds/notification.mp3"
-        preload="auto"
-      />
-
       <KitchenHeader
         soundEnabled={soundEnabled}
         onToggleSound={toggleSound}
+        realtimeStatus={realtimeStatus}
       />
 
       <main className="p-6">

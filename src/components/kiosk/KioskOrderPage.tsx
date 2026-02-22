@@ -37,6 +37,7 @@ export default function KioskOrderPage({
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [orderResult, setOrderResult] = useState<{
+    orderId: string;
     orderNumber: number;
     total: number;
   } | null>(null);
@@ -61,6 +62,7 @@ export default function KioskOrderPage({
 
     // Success: show ticket (convert euros to cents for display)
     setOrderResult({
+      orderId: result.orderId,
       orderNumber: result.orderNumber,
       total: Math.round(totalPrice() * 100),
     });
@@ -79,6 +81,7 @@ export default function KioskOrderPage({
     return (
       <KioskFullscreenWrapper>
         <KioskTicket
+          orderId={orderResult.orderId}
           orderNumber={orderResult.orderNumber}
           total={orderResult.total}
           onNewOrder={handleNewOrder}

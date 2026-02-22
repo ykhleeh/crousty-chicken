@@ -45,6 +45,7 @@ export type CartItem =
   | {
       type: "compose";
       id: string;
+      name?: string; // Localized display name
       size: DishSize;
       base: string;
       baseSauce: string;

@@ -1,19 +1,27 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { useLocale } from "next-intl";
+import { QRCodeSVG } from "qrcode.react";
 
 interface KioskTicketProps {
   orderNumber: number;
+  orderId: string;
   total: number;
   onNewOrder: () => void;
 }
 
 export default function KioskTicket({
   orderNumber,
+  orderId,
   total,
   onNewOrder,
 }: KioskTicketProps) {
   const t = useTranslations("Kiosk");
+  const locale = useLocale();
+
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://croustychicken.be";
+  const trackingUrl = `${baseUrl}/${locale}/order/confirmation/${orderId}`;
 
   return (
     <div className="min-h-screen bg-black flex items-center justify-center px-4">
@@ -30,7 +38,13 @@ export default function KioskTicket({
         </div>
 
         <p className="text-white/70 text-lg mb-4">{t("ticketInstruction")}</p>
-        <p className="text-white/50 text-sm mb-8">{t("ticketSubInstruction")}</p>
+        <p className="text-white/50 text-sm mb-6">{t("ticketSubInstruction")}</p>
+
+        {/* QR Code for tracking */}
+        <div className="bg-white rounded-2xl p-4 mb-4 inline-block">
+          <QRCodeSVG value={trackingUrl} size={120} />
+        </div>
+        <p className="text-white/50 text-xs mb-6">{t("scanToTrack")}</p>
 
         <div className="border-t border-white/10 pt-6 mb-8">
           <p className="text-white/50 text-sm mb-1">{t("total")}</p>

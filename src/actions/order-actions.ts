@@ -19,6 +19,22 @@ export async function getOrderById(orderId: string): Promise<Order | null> {
   }
 }
 
+export async function getOrderByNumber(orderNumber: number): Promise<Order | null> {
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("orders")
+      .select("*")
+      .eq("order_number", orderNumber)
+      .single();
+
+    if (error || !data) return null;
+    return data as Order;
+  } catch {
+    return null;
+  }
+}
+
 export async function checkClickCollectEnabled(): Promise<boolean> {
   try {
     const supabase = await createClient();

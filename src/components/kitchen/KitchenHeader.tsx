@@ -7,11 +7,13 @@ import Link from "next/link";
 interface KitchenHeaderProps {
   soundEnabled: boolean;
   onToggleSound: () => void;
+  realtimeStatus?: string;
 }
 
 export default function KitchenHeader({
   soundEnabled,
   onToggleSound,
+  realtimeStatus,
 }: KitchenHeaderProps) {
   const t = useTranslations("Kitchen");
   const locale = useLocale();
@@ -73,6 +75,22 @@ export default function KitchenHeader({
         </div>
 
         <div className="flex items-center gap-6">
+          {/* Realtime status indicator */}
+          <div className="flex items-center gap-2">
+            <span
+              className={`w-3 h-3 rounded-full ${
+                realtimeStatus === "SUBSCRIBED"
+                  ? "bg-green-500"
+                  : realtimeStatus === "CHANNEL_ERROR"
+                  ? "bg-red-500"
+                  : "bg-yellow-500 animate-pulse"
+              }`}
+            />
+            <span className="text-white/50 text-sm">
+              {realtimeStatus === "SUBSCRIBED" ? "Live" : realtimeStatus}
+            </span>
+          </div>
+
           <span className="text-white/70 font-mono text-lg">{currentTime}</span>
 
           <button

@@ -353,7 +353,9 @@
     "statusPreparing": "PREPARING",
     "markPreparing": "START PREPARING",
     "markReady": "READY",
-    "updating": "Updating..."
+    "updating": "Updating...",
+    "clickToStart": "Activate kitchen display",
+    "clickToStartDesc": "Click to enable sound notifications"
   },
   "AdminKiosk": {
     "pageTitle": "Kiosk Terminals",
