@@ -17,11 +17,13 @@ export default function KitchenDisplay() {
   const [realtimeStatus, setRealtimeStatus] = useState<string>("connecting");
   const audioContextRef = useRef<AudioContext | null>(null);
   const previousOrderIdsRef = useRef<Set<string>>(new Set());
+  const ordersRef = useRef<Order[]>([]);
 
   const fetchOrders = useCallback(async () => {
     console.log("[Kitchen] Fetching orders...");
     const data = await getKitchenOrders();
     console.log("[Kitchen] Fetched orders:", data.length);
+    ordersRef.current = data;
     setOrders(data);
     setLoading(false);
     return data;
@@ -91,63 +93,87 @@ export default function KitchenDisplay() {
     });
   }, [fetchOrders]);
 
-  // Realtime subscription
+  // Realtime subscription with reconnection
   useEffect(() => {
     const supabase = createClient();
+    let channel: ReturnType<typeof supabase.channel> | null = null;
 
-    const channel = supabase
-      .channel("kitchen-orders")
-      .on(
-        "postgres_changes",
-        {
-          event: "INSERT",
-          schema: "public",
-          table: "orders",
-        },
-        async (payload) => {
-          console.log("New order inserted:", payload);
-          const newOrder = payload.new as Order;
+    const setupSubscription = () => {
+      console.log("[Kitchen] Setting up realtime subscription...");
 
-          // Play sound for new paid orders
-          if (newOrder.status === "paid") {
-            playNotificationSound();
+      channel = supabase
+        .channel("kitchen-orders-" + Date.now())
+        .on(
+          "postgres_changes",
+          {
+            event: "*",
+            schema: "public",
+            table: "orders",
+          },
+          async (payload) => {
+            console.log("[Kitchen] Realtime event:", payload.eventType, payload);
+
+            // Get current orders before fetch to detect new ones
+            const prevOrderIds = new Set(ordersRef.current.map(o => o.id));
+            const newOrders = await fetchOrders();
+
+            // Check for new paid orders
+            const newPaidOrders = newOrders.filter(
+              o => o.status === "paid" && !prevOrderIds.has(o.id)
+            );
+
+            // Check for orders that just became paid
+            if (payload.eventType === "UPDATE") {
+              const updated = payload.new as Order;
+              const old = payload.old as Partial<Order>;
+              if (updated.status === "paid" && old.status !== "paid") {
+                console.log("[Kitchen] Order became paid, playing sound");
+                playNotificationSound();
+              }
+            }
+
+            // Play sound for new paid orders
+            if (newPaidOrders.length > 0) {
+              console.log("[Kitchen] New paid orders detected:", newPaidOrders.length);
+              playNotificationSound();
+            }
           }
+        )
+        .subscribe((status) => {
+          console.log("[Kitchen] Realtime status:", status);
+          setRealtimeStatus(status);
 
-          await fetchOrders();
-        }
-      )
-      .on(
-        "postgres_changes",
-        {
-          event: "UPDATE",
-          schema: "public",
-          table: "orders",
-        },
-        async (payload) => {
-          console.log("Order updated:", payload);
-          const updatedOrder = payload.new as Order;
-          const oldOrder = payload.old as Partial<Order>;
-
-          // Play sound when order becomes paid (from pending or pending_payment)
-          if (
-            updatedOrder.status === "paid" &&
-            oldOrder.status !== "paid"
-          ) {
-            playNotificationSound();
+          // Try to reconnect on error or timeout
+          if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") {
+            console.log("[Kitchen] Connection lost, will reconnect...");
+            setTimeout(() => {
+              if (channel) {
+                supabase.removeChannel(channel);
+              }
+              setupSubscription();
+            }, 2000);
           }
+        });
+    };
 
-          await fetchOrders();
-        }
-      )
-      .subscribe((status) => {
-        console.log("[Kitchen] Realtime subscription status:", status);
-        setRealtimeStatus(status);
-      });
+    setupSubscription();
 
     return () => {
-      supabase.removeChannel(channel);
+      if (channel) {
+        supabase.removeChannel(channel);
+      }
     };
-  }, [fetchOrders, playNotificationSound]);
+  }, []); // Empty deps - setup once
+
+  // Polling fallback - refresh every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      console.log("[Kitchen] Polling refresh...");
+      fetchOrders();
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [fetchOrders]);
 
   const toggleSound = () => {
     setSoundEnabled((prev) => !prev);
