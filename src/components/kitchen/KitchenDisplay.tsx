@@ -18,6 +18,8 @@ export default function KitchenDisplay() {
   const audioContextRef = useRef<AudioContext | null>(null);
   const previousOrderIdsRef = useRef<Set<string>>(new Set());
   const ordersRef = useRef<Order[]>([]);
+  const soundEnabledRef = useRef(true);
+  const soundUnlockedRef = useRef(false);
 
   const fetchOrders = useCallback(async () => {
     console.log("[Kitchen] Fetching orders...");
@@ -84,10 +86,25 @@ export default function KitchenDisplay() {
       }, 100);
 
       setSoundUnlocked(true);
+      soundUnlockedRef.current = true;
       console.log("[Kitchen] Sound unlocked! State:", audioContextRef.current.state);
     } catch (e) {
       console.error("[Kitchen] Failed to unlock sound:", e);
     }
+  }, [playBeep]);
+
+  // Use refs version for realtime callbacks (avoids stale closure)
+  const playNotificationSoundRef = useCallback(() => {
+    console.log("[Kitchen] playNotificationSoundRef called - enabled:", soundEnabledRef.current, "unlocked:", soundUnlockedRef.current);
+
+    if (!soundEnabledRef.current || !soundUnlockedRef.current) {
+      console.log("[Kitchen] Sound skipped due to refs");
+      return;
+    }
+
+    // Play a longer "ding-dong" notification (3x duration)
+    playBeep(880, 0.6);
+    setTimeout(() => playBeep(1100, 0.9), 600);
   }, [playBeep]);
 
   const playNotificationSound = useCallback(() => {
@@ -97,9 +114,9 @@ export default function KitchenDisplay() {
       return;
     }
 
-    // Play a "ding-dong" notification
-    playBeep(880, 0.2);
-    setTimeout(() => playBeep(1100, 0.3), 200);
+    // Play a longer "ding-dong" notification (3x duration)
+    playBeep(880, 0.6);
+    setTimeout(() => playBeep(1100, 0.9), 600);
   }, [soundEnabled, soundUnlocked, playBeep]);
 
   // Initial fetch
@@ -145,14 +162,14 @@ export default function KitchenDisplay() {
               const old = payload.old as Partial<Order>;
               if (updated.status === "paid" && old.status !== "paid") {
                 console.log("[Kitchen] Order became paid, playing sound");
-                playNotificationSound();
+                playNotificationSoundRef();
               }
             }
 
             // Play sound for new paid orders
             if (newPaidOrders.length > 0) {
               console.log("[Kitchen] New paid orders detected:", newPaidOrders.length);
-              playNotificationSound();
+              playNotificationSoundRef();
             }
           }
         )
@@ -193,7 +210,10 @@ export default function KitchenDisplay() {
   }, [fetchOrders]);
 
   const toggleSound = () => {
-    setSoundEnabled((prev) => !prev);
+    setSoundEnabled((prev) => {
+      soundEnabledRef.current = !prev;
+      return !prev;
+    });
   };
 
   // Separate orders by status
